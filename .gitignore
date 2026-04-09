@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.desloppify/
+*.log
+.env
+.env.*
