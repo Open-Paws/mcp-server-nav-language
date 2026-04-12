@@ -7,9 +7,7 @@
 
 import { parse as parseYaml } from "yaml";
 import { EMBEDDED_RULES, type NavRule, type Severity } from "./rules.js";
-
-const UPSTREAM_YAML_URL =
-  "https://raw.githubusercontent.com/Open-Paws/semgrep-rules-no-animal-violence/main/rules/animal-violence-generic.yaml";
+import { UPSTREAM_RULES_URL } from "./constants.js";
 
 interface SemgrepRule {
   id: string;
@@ -68,7 +66,7 @@ export async function loadRules(): Promise<NavRule[]> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    const response = await fetch(UPSTREAM_YAML_URL, {
+    const response = await fetch(UPSTREAM_RULES_URL, {
       signal: controller.signal,
     });
     clearTimeout(timeout);

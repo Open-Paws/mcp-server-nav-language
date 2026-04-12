@@ -30,7 +30,7 @@ async function main(): Promise<void> {
   // Load rules: embedded set + optional upstream merge
   const rules = await loadRules();
   const engine = new NavEngine(rules);
-  console.log(`[nav] Engine ready with ${engine.ruleCount} rules.`);
+  console.error(`[nav] Engine ready with ${engine.ruleCount} rules.`);
 
   // Create MCP server
   const server = new McpServer({
@@ -142,19 +142,19 @@ async function startHttpMode(
   });
 
   httpServer.listen(port, () => {
-    console.log(`[nav] HTTP server listening on port ${port}`);
-    console.log(`[nav] Agent Card: ${baseUrl}/.well-known/agent.json`);
-    console.log(`[nav] Health: ${baseUrl}/health`);
+    console.error(`[nav] HTTP server listening on port ${port}`);
+    console.error(`[nav] Agent Card: ${baseUrl}/.well-known/agent.json`);
+    console.error(`[nav] Health: ${baseUrl}/health`);
   });
 
   // Keep process alive
   await new Promise<void>((resolve) => {
     process.on("SIGTERM", () => {
-      console.log("[nav] SIGTERM received. Stopping.");
+      console.error("[nav] SIGTERM received. Stopping.");
       httpServer.close(() => resolve());
     });
     process.on("SIGINT", () => {
-      console.log("[nav] SIGINT received. Stopping.");
+      console.error("[nav] SIGINT received. Stopping.");
       httpServer.close(() => resolve());
     });
   });
