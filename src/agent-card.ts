@@ -5,6 +5,8 @@
  * discovered and invoked by other agents (Gary, n8n workflows, Cursor, etc.)
  */
 
+import { AGENT_CONTACT_URL, AGENT_SOURCE_URL } from "./constants.js";
+
 export interface AgentCard {
   name: string;
   description: string;
@@ -98,8 +100,8 @@ export function buildAgentCard(baseUrl: string): AgentCard {
         },
       ],
     },
-    contact: "https://github.com/Open-Paws",
+    contact: AGENT_CONTACT_URL,
     license: "GPL-3.0-only",
-    source: "https://github.com/Open-Paws/mcp-server-nav-language",
+    source: AGENT_SOURCE_URL,
   };
 }

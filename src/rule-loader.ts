@@ -7,9 +7,7 @@
 
 import { parse as parseYaml } from "yaml";
 import { EMBEDDED_RULES, type NavRule, type Severity } from "./rules.js";
-
-const UPSTREAM_YAML_URL =
-  "https://raw.githubusercontent.com/Open-Paws/semgrep-rules-no-animal-violence/main/rules/animal-violence-generic.yaml";
+import { UPSTREAM_RULES_URL } from "./constants.js";
 
 interface SemgrepRule {
   id: string;
@@ -68,13 +66,13 @@ export async function loadRules(): Promise<NavRule[]> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    const response = await fetch(UPSTREAM_YAML_URL, {
+    const response = await fetch(UPSTREAM_RULES_URL, {
       signal: controller.signal,
     });
     clearTimeout(timeout);
 
     if (!response.ok) {
-      console.warn(
+      console.error(
         `[nav] Upstream rule fetch returned ${response.status}. Using embedded rules only.`
       );
       return [...EMBEDDED_RULES];
@@ -86,11 +84,11 @@ export async function loadRules(): Promise<NavRule[]> {
     // Merge: add upstream rules not already covered by id
     const newRules = upstreamRules.filter((r) => !embeddedIds.has(r.id));
     if (newRules.length > 0) {
-      console.log(
+      console.error(
         `[nav] Loaded ${upstreamRules.length} upstream rules, merged ${newRules.length} new.`
       );
     } else {
-      console.log(
+      console.error(
         `[nav] Upstream rules fetched. ${EMBEDDED_RULES.length} embedded rules are current.`
       );
     }
@@ -98,7 +96,7 @@ export async function loadRules(): Promise<NavRule[]> {
     return [...EMBEDDED_RULES, ...newRules];
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.warn(
+    console.error(
       `[nav] Could not fetch upstream rules (${message}). Using embedded rules only.`
     );
     return [...EMBEDDED_RULES];
